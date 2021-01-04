@@ -6,14 +6,9 @@
           Image Guardian
         </h1>
         <div class="links">
-              <div key="key">
-                <img src= "https://ipfs.io/ipfs/${ipfsHash}" alt="">
+              <div v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
+                <img :src="'https://ipfs.io/ipfs/' + ipfsHash" >
               </div>
-            <img src= "https://ipfs.io/ipfs/${this.state.hoge}" alt="">
-        <!-- <el-form-item label="Photo" required>
-          <input type="file" accept=".jpg, .jpeg, .png" @change="captureFile" />
-          <el-button @submit="onSubmit()"></el-button>
-        </el-form-item> -->
           <form @submit="onSubmit">
             <input type="file" @change="captureFile" />
             <input type="submit" id="click" />
@@ -33,79 +28,72 @@ import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
 // import VuePreviewer from '~/plugins/vue-image-previewer.js';
 
-  export default {
-    data() { 
+export default {
+  data() { 
 
-    return { 
-    write: 0, // コントラクトから取得する数値 
-    state: {
-      web3: null, 
-      accounts: null, 
-      contract: null,
-      buffer: '',
-      hoge: '',
-      instance: '',
-      },
-    } 
-  }, 
-
-  methods: {
-
-    async captureFile(event) {
-      event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
-      const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
-      const reader = await new window.FileReader(); // FileReader はデータ読み込みを目的としたオブジェクト
-      // Vue.set(this.state.buffer, 'Buffer(reader.result)')
-      reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
-
-      reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
-        this.state.buffer = Buffer(reader.result);
-        resolve(event.target.result);
-      }
+  return { 
+  write: 0, // コントラクトから取得する数値 
+  ipfsHashs: [],
+  state: {
+    web3: null, 
+    accounts: null, 
+    contract: null,
+    buffer: '',
+    hoge: '',
+    instance: '',
     },
+  } 
+}, 
 
-    async onSubmit() {
-      event.preventDefault()
+methods: {
+
+  async captureFile(event) {
+    event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
+    const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
+    const reader = await new window.FileReader(); // FileReader はデータ読み込みを目的としたオブジェクト
+    // Vue.set(this.state.buffer, 'Buffer(reader.result)')
+    reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
+
+    reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
+      this.state.buffer = Buffer(reader.result);
+      resolve(event.target.result);
+    }
+  },
+
+  async onSubmit() {
+    event.preventDefault()
 
     ipfs.files.add(this.state.buffer, async (error, result) => {
       if(error) {
         console.error(error)
         return
       }
-      console.log(this.$contract)
-      console.log("1");
-      let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      console.log(accounts)
-      // console.log(result)
-      console.log(IpfsHash)
-      console.log("1.5")
+    let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
       //ブロックチェーンにipfsHashを書きこむ
-      let ret = await this.$contract.methods.set(result[0].IpfsHash).send({ from: accounts[0] })
-      // let ret2 = await this.$contract.methods.IpfsHash().send({ from: accounts[0] })
-      console.log("2");
-      this.write = ret // フロントへ反映
-      // this.number2 = ret2
+    let ret = await this.$contract.methods.set(result[0].hash).send({ from: accounts[0] })
+    this.write = ret // フロントへ反映
       //ipfsHashの値をアップデートする
-      return this.loadIpfsHash();
-      console.log("3");
+      // return this.loadIpfsHash();
     })
   },
 
-    loadIpfsHash: async function() {
+  loadIpfsHash: async function() {
     const length = await this.$contract.methods.arraylength().call()
-    console.log(length)
-    for (var i = 0; i <= length; i++) {
-      const ipfsHashs = await this.$contract.methods.IpfsHash(i).call()
-      console.log(ipfsHashs)
-      Vue.set(ipfsHash, '...this.state.ipfsHash', 'ipfsHashs')
-        }
-      }
-    },
 
-  mounted() { 
-
-    },
+    for (var i = 0; i < length; i++) {
+      const ipfsHash = await this.$contract.methods.IpfsHash(i).call()
+      // console.log(ipfsHash);
+      this.ipfsHashs.push(ipfsHash)
+    }
   }
+},
+
+  async created() { 
+    setTimeout(async () => {
+      await this.loadIpfsHash();
+    }, 1)
+  },
+}
 </script>
 
 <style>
