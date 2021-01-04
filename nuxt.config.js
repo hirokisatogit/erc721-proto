@@ -20,7 +20,8 @@ export default {
   plugins: [
     { src: '~/plugins/getWeb3.js'},
     { src: '~/plugins/ipfs.js'},
-    { src: '~/plugins/web3.js' }
+    { src: '~/plugins/web3.js' },
+    // { src: '~/plugins/vue-image-previewer.js', mode: "client" }
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

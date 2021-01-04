@@ -1,33 +1,37 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="title">
-        Image Guardian
-      </h1>
-      <div class="links">
-            <div key="key">
-              <img src= "https://ipfs.io/ipfs/${ipfsHash}" alt="">
-            </div>
-          <img src= "https://ipfs.io/ipfs/${this.state.hoge}" alt="">
-      <!-- <el-form-item label="Photo" required>
-        <input type="file" accept=".jpg, .jpeg, .png" @change="captureFile" />
-        <el-button @submit="onSubmit()"></el-button>
-      </el-form-item> -->
-        <form @submit="onSubmit">
-          <input type="file" @change="captureFile" />
-          <input type="submit" id="click" />
-        </form>
+  <client-only>
+    <div class="container">
+      <div>
+        <h1 class="title">
+          Image Guardian
+        </h1>
+        <div class="links">
+              <div key="key">
+                <img src= "https://ipfs.io/ipfs/${ipfsHash}" alt="">
+              </div>
+            <img src= "https://ipfs.io/ipfs/${this.state.hoge}" alt="">
+        <!-- <el-form-item label="Photo" required>
+          <input type="file" accept=".jpg, .jpeg, .png" @change="captureFile" />
+          <el-button @submit="onSubmit()"></el-button>
+        </el-form-item> -->
+          <form @submit="onSubmit">
+            <input type="file" @change="captureFile" />
+            <input type="submit" id="click" />
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+  </client-only>
 </template>
+
 
 <script>
 import Web3 from "web3";
-import SimpleStorageContract from "~/contracts json/SimpleStorage.json";
+import SimpleStorageContract from "~/build/contracts/SimpleStorage.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
+// import VuePreviewer from '~/plugins/vue-image-previewer.js';
 
   export default {
     data() { 

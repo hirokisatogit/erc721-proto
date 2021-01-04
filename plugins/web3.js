@@ -1,5 +1,5 @@
 import Web3 from 'web3' 
-import artifacts from "~/contracts json/SimpleStorage.json"
+import artifacts from "~/build/contracts/SimpleStorage.json"
 
 export default async function (context, inject) { 
  let web3 
