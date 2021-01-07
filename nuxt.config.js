@@ -22,6 +22,7 @@ export default {
     { src: '~/plugins/getWeb3.js'},
     { src: '~/plugins/ipfs.js'},
     { src: '~/plugins/web3.js' },
+    { src: '~/plugins/vue-carousel.js', mode: "client" },
     { src: '~/plugins/vue-image-previewer.js', mode: "client" }
   ],
 
