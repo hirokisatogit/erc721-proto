@@ -5,8 +5,8 @@
             Image Guardian
           </h1>
             <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
-              <slide v-for="(ipfsHashUrl, index) in this.ipfsHashUrls" :key="index">
-                <img class="image" :src="ipfsHashUrl" >
+              <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
+                <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash" >
               </slide>
             </carousel>
           <form @submit="onSubmit">
@@ -31,14 +31,11 @@ export default {
   data() { 
   return { 
   write: 0, // コントラクトから取得する数値 
-  ipfsHashUrls: [
-    require("https://ipfs.io/ipfs/ipfsHashUrl")
-  ],
+  ipfsHashs: [],
   buffer: '',
   } 
 }, 
 methods: {
-
   async captureFile(event) {
     event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
     const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
@@ -67,9 +64,9 @@ methods: {
   loadIpfsHash: async function() {
     const length = await this.$contract.methods.arraylength().call()
     for (var i = 0; i < length; i++) {
-      const ipfsHashUrl = await this.$contract.methods.IpfsHash(i).call()
+      const ipfsHash = await this.$contract.methods.IpfsHash(i).call()
       // console.log(ipfsHash);
-      this.ipfsHashUrls.push(ipfsHashUrl)
+      this.ipfsHashs.push(ipfsHash)
     }
   }
 },
@@ -83,15 +80,13 @@ methods: {
       await this.loadIpfsHash();
     }, 1)
 },
-
 }
 </script>
 
 <style>
-
 .top {
   margin: 0 auto;
-  max-height: 300vh;
+  max-height: 150vh;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -101,7 +96,7 @@ methods: {
 .title {
   font-family:
     sans-serif;
-  height: 250px;
+  height: 150px;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -109,26 +104,29 @@ methods: {
   /* letter-spacing: 1px; */
 }
 .contents {
-  overflow: hidden;
+  display: block;
+  /* overflow: hidden; */
   position: relative;
-  /* padding-top: calc(9 / 16 * 100%);
-  width: 50vw;
-  height: 100px; */
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  justify-content: center;
+  text-align: center;
+  padding-top: calc(9 / 16 * 100%);
+  /* width: 980px; */
+  /* height: 500px; */
+  box-shadow: 0px 0px 10px 0px rgba(3, 3, 3, 0.75);
 }
 .image {
-  display: block;
-  /* height: 250px; */
-  /* width: 500px; */
-  /* margin: auto; */
-  position: center;
-  width: 100%;
-  height: 100%;
-  /* align-items: center; */
-  text-align: center;
+  position: relative;
+  /* top: 50%; */
+  /* left: 50%; */
+  height: 250px; 
+  width: 200px;
+  margin: auto;
+  /* position: center; */
+  /* width: auto;  */
+  /* height: auto; */
+  align-items: center;
   object-fit: cover;
   /* opacity: 0; */
-  /* transition: opacity 1s; */
+  transition: opacity 1s;
 }
 </style>
