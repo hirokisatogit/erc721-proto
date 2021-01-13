@@ -9,10 +9,6 @@
                 <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash" >
               </slide>
             </carousel>
-          <form @submit="onSubmit">
-            <input type="file" @change="captureFile" />
-            <input type="submit" id="click" />
-          </form>
       </div>
     </div>
 </template>
@@ -87,7 +83,7 @@ methods: {
 .top {
   margin: 0 auto;
   max-height: 150vh;
-  height: 100vh;
+  height: 98vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,7 +105,7 @@ methods: {
   position: relative;
   justify-content: center;
   text-align: center;
-  padding-top: calc(9 / 16 * 100%);
+  /* padding-top: calc(9 / 16 * 100%); */
   /* width: 980px; */
   /* height: 500px; */
   box-shadow: 0px 0px 10px 0px rgba(3, 3, 3, 0.75);
@@ -118,7 +114,7 @@ methods: {
   position: relative;
   /* top: 50%; */
   /* left: 50%; */
-  height: 250px; 
+  height: 200px; 
   width: 200px;
   margin: auto;
   /* position: center; */

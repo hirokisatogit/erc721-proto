@@ -25,6 +25,7 @@ contract ERC1155Certificate is ERC1155("test") {
     certificateId = certificateId.add(1); // 6行目のSafeMathを使っておりNFTを発行している 1を足しているのはデフォルトの使い方
     _mint(msg.sender, certificateId, numberOfCertificate, _data); // 証明証を発行している部分 OpenZeppelin参照
     certificates.push(Certificate(certificateId, _nameOfCertificate, _data, msg.sender, now)); // Certificateを用いて一つ一つ代入し、certificatesにプッシュしている
+    // msg.sender:アドレス、now: 現在時刻、
     for (uint i = 0; i < numberOfCertificate; i++ ) {
       safeTransferFrom(msg.sender, _toAddresses[i], certificateId, 1, _data); // safeTransferFromは持っている引数をそれぞれのアドレスに送っているもの OpenZeppelin参照
       myCertificateId[_toAddresses[i]].push(certificateId); // 送る人の証明証のidを送り先のアドレスと紐付けている
