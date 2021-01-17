@@ -1,6 +1,14 @@
 <template>
+  <body>
     <div class="top">
       <div>
+        <nav id="menu">
+          <div class="main-nav-list active-element">
+            <ul>
+              <li><a href="./issuer_pages" class="active-link">Issuer</a></li>
+            </ul>
+          </div>
+        </nav>
           <h1 class="title">
             Image Guardian
           </h1>
@@ -11,27 +19,30 @@
             </carousel>
       </div>
     </div>
+  </body>
 </template>
 
 <script>
 import Web3 from "web3";
-import Carousel from '~/node_modules/vue-carousel/src/Carousel.vue' // 指定の仕方間違ってるかも
+import Carousel from '~/node_modules/vue-carousel/src/Carousel.vue'
 import Slide from '~/node_modules/vue-carousel/src/Slide.vue'
 import SimpleStorageContract from "~/build/contracts/SimpleStorage.json";
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
-// import VuePreviewer from '~/plugins/vue-image-previewer.js';
+
 export default {
   data() { 
-  return { 
+  return {
   write: 0, // コントラクトから取得する数値 
   ipfsHashs: [],
   buffer: '',
-  } 
-}, 
+  }
+},
+
 methods: {
+
   async captureFile(event) {
     event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
     const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
@@ -50,9 +61,10 @@ methods: {
         return
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      //ブロックチェーンにipfsHashを書きこむ
-    let ret = await this.$contract.methods.set(result[0].hash).send({ from: accounts[0] })
-    this.write = ret // フロントへ反映
+      // ブロックチェーンにipfsHashを書きこむ
+    let ret = await this.$contract.methods.set(result[0].hash)
+    let nft = await this.$contract.methods.issueCertificate().send({ from: accounts[0] }) // 証明証をnft化する
+    this.write = nft // フロントへ反映
       // ipfsHashの値をアップデートする
       // return this.loadIpfsHash();
   })
@@ -64,13 +76,12 @@ methods: {
       // console.log(ipfsHash);
       this.ipfsHashs.push(ipfsHash)
     }
-  }
+}
 },
   components: {
     Carousel,
     Slide
-  },
-  // layout: 'client/simple',
+},
   async created() { 
     setTimeout(async () => {
       await this.loadIpfsHash();
@@ -92,7 +103,8 @@ methods: {
 .title {
   font-family:
     sans-serif;
-  height: 150px;
+  height: 800px;
+  padding-top: 300px;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -112,17 +124,53 @@ methods: {
 }
 .image {
   position: relative;
-  /* top: 50%; */
-  /* left: 50%; */
   height: 200px; 
   width: 200px;
   margin: auto;
-  /* position: center; */
   /* width: auto;  */
   /* height: auto; */
   align-items: center;
   object-fit: cover;
   /* opacity: 0; */
   transition: opacity 1s;
+}
+#menu {
+  margin: 0;
+  width: auto;
+  background-color: #565656;
+  font-size: 16px;
+  font-family: Tahoma, Geneva, sans-serif;
+  font-weight: bold;
+  text-align: left;
+  padding: 8px;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+#menu li {
+  display: inline;
+  padding: 80px;
+}
+#menu a {
+  color: #FFF;
+  padding: 10px;
+  text-decoration: none;
+}
+#menu a:hover {
+  background-color: #1B191B;
+  color: #FFF;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+#menu li .active {
+  background-color: #1B191B;
+  color: #FFF;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -o-border-radius: 20px;
 }
 </style>

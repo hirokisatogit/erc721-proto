@@ -31,7 +31,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -57,7 +58,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -70,7 +72,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"}],\"name\":\"createIpfsHash\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"IpfsHash\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"_ipfsHash\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"arraylength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_ipfsHash\",\"type\":\"string\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/satouhiroki/Documents/GitHub/Image_Guardian_User/contracts/SimpleStorage.sol\":\"SimpleStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/satouhiroki/Documents/GitHub/Image_Guardian_User/contracts/SimpleStorage.sol\":{\"keccak256\":\"0xb975a8977b4f6135cc4b745f793401c87fea7402b0e499e47e558f590a3e3f41\",\"urls\":[\"bzz-raw://9c9e91b11f9991bbd1d0a2cf10397d8dac6f92753bd2d7bd1f0e0de7b46b813a\",\"dweb:/ipfs/Qmd2Bm1rBicACsz6WjjRVwn2tNm79MiwEXw52Pc9ndmTF6\"]}},\"version\":1}",
@@ -1469,12 +1472,13 @@
         }
       },
       "links": {},
-      "address": "0xe2FCD51DADB010a229AFE8223d9923717FAE3cbB",
-      "transactionHash": "0xcd0c3a0bc4b40e30c0bf2945890989bde9c23a163b53bb2b941c6da1d2bad192"
+      "address": "0x11755AA32C4D5580B51015b34147049619ED36a7",
+      "transactionHash": "0xe22255f12ee3ca61b448578f17319c576c48b778d166cdf316888287047f5997"
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-01-09T10:36:26.053Z",
+  "updatedAt": "2021-01-15T04:39:25.004Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

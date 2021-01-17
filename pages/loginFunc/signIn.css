@@ -1,0 +1,12 @@
+.title {
+  font-family:
+    sans-serif;
+  height: 200px;
+  padding-top: 300px;
+  display: block;
+  text-align: center;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  /* letter-spacing: 1px; */
+}
