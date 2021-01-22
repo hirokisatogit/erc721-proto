@@ -1,13 +1,13 @@
 <template>
   <div class="top">
     <div>
-        <nav id="menu">
-          <div class="main-nav-list active-element">
-            <ul>
-              <li><a href="/" class="active-link">User</a></li>
-            </ul>
-          </div>
-        </nav>
+      <nav id="menu">
+        <div class="main-nav-list active-element">
+          <ul>
+            <li><a href="/" class="active-link">User</a></li>
+          </ul>
+        </div>
+      </nav>
       <h1 class="title">
         Image Guardian
       </h1>
@@ -15,7 +15,17 @@
         Issuer
       </h2>
       <div class="submit">
-        <form @submit="onSubmit">
+        <form v-on:submit.prevent="onSubmit">
+          <div>証明書名： 
+            <input type="text" v-model="nft.toName">
+          </div>
+          <div>発行枚数： 
+            <input type="number" v-model="nft.issueNumber">
+          </div>
+          <div class="address">発行先アドレス： 
+            <input type="password" v-bind:value="nft.toAddresses">
+          <!-- <div v-for="(bufAddress,index) in toAddresses" :key="index"></div> -->
+          </div>
           <input type="file" @change="captureFile" />
           <input class="btn" type="submit" id="click" />
         </form>
@@ -26,7 +36,6 @@
 
 <script>
 import Web3 from "web3";
-import SimpleStorageContract from "~/build/contracts/SimpleStorage.json";
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
@@ -36,9 +45,16 @@ export default {
   data() { 
   return { 
   write: 0, // コントラクトから取得する数値 
-  ipfsHash: [],
+  ipfsHashs: [],
   buffer: '',
-  } 
+  privateKey: '', //秘密鍵
+  bufAddress: '', // アドレス
+  nft: {
+    toName: '', // 送り先の名前
+    issueNumber: 0, // 発行数
+    toAddresses: [], // 送り先アドレス
+  },
+  }
 }, 
 
 methods: {
@@ -50,7 +66,7 @@ methods: {
     reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
     reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
       this.buffer = Buffer(reader.result);
-      resolve(event.target.result);
+      return event.target.result;
   }
 },
   async onSubmit() {
@@ -61,25 +77,18 @@ methods: {
         return
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      //  ブロックチェーンにipfsHashを書きこむ
-    let ret = await this.$contract.methods.set(result[0].hash)
-    let nft = await this.$contract.methods.issueCertificate("0x").send({ from: accounts[0] }) // 証明証をnft化する
-      //  issueCertificate関数の引数は発行者名、発行数、発行先アドレス、result[0].hashの4つだとすれば初めの3つはauthenticationのデータから取ってくる？
-    this.write = nft // フロントへ反映
+      // 証明証をnft化する
+    // let newAddresses = []
+    // let arrayAddresses = newAddresses.push(this.bufAddress)
+    // this.nft.toAddresses = arrayAddresses
+    // nft.toAddresses = bufAddress
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
+      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
       // ipfsHashの値をアップデートする
-      // return this.loadIpfsHash();
+    // return this.loadIpfsHash();
   })
 },
-  loadIpfsHash: async function() {
-    const length = await this.$contract.methods.arraylength().call()
-    for (var i = 0; i < length; i++) {
-      const ipfsHash = await this.$contract.methods.IpfsHash(i).call()
-      // console.log(ipfsHash);
-      this.ipfsHashs.push(ipfsHash)
-    }
-  }
 },
-
 }
 </script>
 
@@ -95,7 +104,7 @@ methods: {
 #menu {
   position: relative;
   /* top: 0px; */
-  bottom: 155px;
+  bottom: 85px;
   width: auto;
   background-color: #565656;
   font-size: 16px;
@@ -137,7 +146,7 @@ methods: {
   position: relative;
   font-family:
     sans-serif;
-  top: 143px;
+  top: 100px;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -148,8 +157,8 @@ methods: {
   position: relative;
     font-family:
     sans-serif;
-    top: 100px;
-    margin-bottom: 100px;
+  top: 100px;
+  margin-bottom: 100px;
   display: block;
   font-weight: 300;
   font-size: 100px;

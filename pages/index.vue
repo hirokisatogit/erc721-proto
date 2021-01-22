@@ -14,9 +14,13 @@
           </h1>
             <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
               <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
-                <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash" >
+                <p>{{ipfsHash.ipfsHash}}</p>
+                <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash.ipfsHash" >
               </slide>
             </carousel>
+          <div class="links" v-if="!isSignedIn"> 
+            <button @click="signIn()">Sign In</button>  
+          </div> 
       </div>
     </div>
   </body>
@@ -24,9 +28,11 @@
 
 <script>
 import Web3 from "web3";
-import Carousel from '~/node_modules/vue-carousel/src/Carousel.vue'
-import Slide from '~/node_modules/vue-carousel/src/Slide.vue'
-import SimpleStorageContract from "~/build/contracts/SimpleStorage.json";
+import firebase from 'firebase';
+import sha256 from "js-sha256";
+import toContract from "~/plugins/toContract.js";
+import Carousel from '~/node_modules/vue-carousel/src/Carousel.vue';
+import Slide from '~/node_modules/vue-carousel/src/Slide.vue';
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
@@ -38,6 +44,14 @@ export default {
   write: 0, // コントラクトから取得する数値 
   ipfsHashs: [],
   buffer: '',
+  isSignedIn: false,
+  privatekey: '', //秘密鍵
+  address: '', // アドレス
+    nft: {
+    toName: '', // 送り先の名前
+    issueNumber: 0, // 発行数
+    toAddresses: [], // 送り先アドレス
+  },
   }
 },
 
@@ -61,32 +75,70 @@ methods: {
         return
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      // ブロックチェーンにipfsHashを書きこむ
-    let ret = await this.$contract.methods.set(result[0].hash)
-    let nft = await this.$contract.methods.issueCertificate().send({ from: accounts[0] }) // 証明証をnft化する
-    this.write = nft // フロントへ反映
+      // 証明証をnft化する
+    // let newAddresses = []
+    // let arrayAddresses = newAddresses.push(this.bufAddress)
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
+      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
       // ipfsHashの値をアップデートする
-      // return this.loadIpfsHash();
+    // return this.loadIpfsHash();
   })
 },
   loadIpfsHash: async function() {
-    const length = await this.$contract.methods.arraylength().call()
-    for (var i = 0; i < length; i++) {
-      const ipfsHash = await this.$contract.methods.IpfsHash(i).call()
-      // console.log(ipfsHash);
-      this.ipfsHashs.push(ipfsHash)
+    let accounts = await this.$web3.eth.getAccounts()
+    console.log(accounts[0]);
+    const id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
+    for (var i = 0; i < id; i++) {
+      const certificates = await this.$contract.methods.certificates(i).call()
+      this.ipfsHashs.push(certificates)
     }
-}
+},
+  signIn: function() { 
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(provider); 
+} 
 },
   components: {
     Carousel,
     Slide
 },
+  mounted() {
+    if (!firebase.apps.length) {
+    var firebaseConfig = {
+    apiKey: process.env.APIKEY, 
+    authDomain: process.env.AUTHDOMAIN, 
+    }; 
+    // Initialize Firebase 
+    firebase.initializeApp(firebaseConfig); 
+    console.log("Current Block Number"); 
+    this.$web3.eth.getBlockNumber().then(console.log);  
+  };
+
+  if (!firebase.apps.length) { 
+    var self = this; 
+    firebase.auth().getRedirectResult().then(function(result) { 
+    if (result.credential) { 
+    let user = result.user; 
+    self.isSignedIn = true; 
+    console.log(user.uid);
+    self.privateKey = "0x" + sha256.hex(user.uid); 
+    self.address = self.$web3.eth.accounts.privateKeyToAccount(self.privateKey).address;
+    self.$web3.eth.defaultAccount = self.address;
+    console.log("Address:" + self.address);
+    } 
+  }).catch(function(error) { 
+    let errorMessage = error.message; 
+    console.log(errorMessage); 
+  }); 
+    console.log("Current Block Number"); 
+    this.$web3.eth.getBlockNumber().then(console.log);  
+  }
+},
   async created() { 
     setTimeout(async () => {
       await this.loadIpfsHash();
     }, 1)
-},
+}
 }
 </script>
 
@@ -103,8 +155,9 @@ methods: {
 .title {
   font-family:
     sans-serif;
-  height: 800px;
-  padding-top: 300px;
+  /* height: 800px; */
+  margin-bottom: 70px;
+  padding-top: 10px;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -112,11 +165,11 @@ methods: {
   /* letter-spacing: 1px; */
 }
 .contents {
-  display: block;
+  /* display: block; */
   /* overflow: hidden; */
   position: relative;
   justify-content: center;
-  text-align: center;
+  /* text-align: center; */
   /* padding-top: calc(9 / 16 * 100%); */
   /* width: 980px; */
   /* height: 500px; */
@@ -124,14 +177,10 @@ methods: {
 }
 .image {
   position: relative;
-  height: 200px; 
-  width: 200px;
-  margin: auto;
-  /* width: auto;  */
-  /* height: auto; */
+  height: 450px; 
+  width: 450px;
   align-items: center;
   object-fit: cover;
-  /* opacity: 0; */
   transition: opacity 1s;
 }
 #menu {

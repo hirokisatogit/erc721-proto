@@ -1,6 +1,11 @@
 export default {
   ssr: false,
   // Global page headers (https://go.nuxtjs.dev/config-head)
+  env: { 
+    APIKEY: 'AIzaSyA_AmJiXG-UFTrUfxBFGg6XPq56Yx5gZPg', 
+    AUTHDOMAIN: 'image-guardian.firebaseapp.com', 
+    PRIVATE: process.env.PRIVATE || "http://localhost:8545",
+    },   
   head: {
     title: 'Image_Guardian',
     meta: [
