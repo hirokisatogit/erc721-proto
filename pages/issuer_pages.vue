@@ -52,7 +52,7 @@ export default {
   nft: {
     toName: '', // 送り先の名前
     issueNumber: 0, // 発行数
-    toAddresses: [], // 送り先アドレス
+    toAddresses: ["", ""], // 送り先アドレス
   },
   }
 }, 
