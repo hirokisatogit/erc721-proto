@@ -13,6 +13,7 @@
             Image Guardian
           </h1>
             <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
+              {{nft.toName}}
               <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
                 <p>{{ipfsHash.ipfsHash}}</p>
                 <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash.ipfsHash" >
@@ -50,7 +51,7 @@ export default {
     nft: {
     toName: '', // 送り先の名前
     issueNumber: 0, // 発行数
-    toAddresses: ["",""], // 送り先アドレス
+    toAddresses: [], // 送り先アドレス
   },
   }
 },
@@ -80,8 +81,9 @@ methods: {
     // let arrayAddresses = newAddresses.push(this.bufAddress)
     let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
+    this.write = upNft
       // ipfsHashの値をアップデートする
-    // return this.loadIpfsHash();
+    return this.loadIpfsHash();
   })
 },
   loadIpfsHash: async function() {
@@ -89,8 +91,8 @@ methods: {
     console.log(accounts[0]);
     const id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
     for (var i = 0; i < id; i++) {
-      const certificates = await this.$contract.methods.certificates(i).call()
-      this.ipfsHashs.push(certificates)
+      const certificate = await this.$contract.methods.certificates(i).call()
+      this.ipfsHashs.push(certificate)
     }
 },
   signIn: function() { 

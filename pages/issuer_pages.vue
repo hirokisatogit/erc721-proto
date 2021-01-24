@@ -15,7 +15,7 @@
         Issuer
       </h2>
       <div class="submit">
-        <form v-on:submit.prevent="onSubmit">
+        <form v-on:submit="onSubmit" action='https://image-guardian.web.app/' method='post'>
           <div>証明書名： 
             <input type="text" v-model="nft.toName">
           </div>
@@ -23,11 +23,16 @@
             <input type="number" v-model="nft.issueNumber">
           </div>
           <div class="address">発行先アドレス： 
-            <input type="password" v-bind:value="nft.toAddresses">
-          <!-- <div v-for="(bufAddress,index) in toAddresses" :key="index"></div> -->
+            <ul >
+              <li v-for="(form, index) in pasform" :key="index">{{form.password}}
+                <input type="password"  placeholder="address" v-model="form.password">
+                <button v-on:click="appendForm">追加</button>
+                <button v-on:click="deleteForm">削除</button>
+              </li>
+            </ul>
           </div>
-          <input type="file" @change="captureFile" />
-          <input class="btn" type="submit" id="click" />
+          <input type="file" @change="captureFile"/>
+          <input class="btn" type="submit"/>
         </form>
       </div>
     </div>
@@ -35,8 +40,9 @@
 </template>
 
 <script>
-import Web3 from "web3";
+import Vue from 'vue/dist/vue.esm.js';
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
+import Web3 from "web3";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
@@ -45,16 +51,22 @@ export default {
   data() { 
   return { 
   write: 0, // コントラクトから取得する数値 
-  ipfsHashs: [],
+  pasform: [{
+    password: '',
+  },{
+    password: '',
+  }],
+  nextPasform: 3,
   buffer: '',
+  // forms: ['', ''],
   privateKey: '', //秘密鍵
   bufAddress: '', // アドレス
   nft: {
     toName: '', // 送り先の名前
     issueNumber: 0, // 発行数
-    toAddresses: ["", ""], // 送り先アドレス
+    toAddresses: [], // 送り先アドレス
   },
-  }
+}
 }, 
 
 methods: {
@@ -69,7 +81,7 @@ methods: {
       return event.target.result;
   }
 },
-  async onSubmit() {
+  async onSubmit(event) {
     event.preventDefault()
     ipfs.files.add(this.buffer, async (error, result) => {
       if(error) {
@@ -78,15 +90,32 @@ methods: {
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
       // 証明証をnft化する
-    // let newAddresses = []
-    // let arrayAddresses = newAddresses.push(this.bufAddress)
-    // this.nft.toAddresses = arrayAddresses
-    // nft.toAddresses = bufAddress
     let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
+    // return upNft;
+    this.write = upNft
       // ipfsHashの値をアップデートする
     // return this.loadIpfsHash();
   })
+},
+  async submitIpfsHash() {
+    for (var i = 0; i < length; i++) {
+      const certificate = await this.$contract.methods.certificates(i).call()
+      this.ipfsHashs.push(certificate)
+    }
+ },
+  appendForm() {
+    this.pasform.push(this.independentObejct());
+    this.write++;
+},
+  deleteForm(de) {
+    this.pasform.splice(de, 1);
+    this.write--;
+},
+  independentObejct() {
+    return {
+      password: ''
+  }
 },
 },
 }
