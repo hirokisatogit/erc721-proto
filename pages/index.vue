@@ -13,7 +13,6 @@
             Image Guardian
           </h1>
             <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
-              {{nft.toName}}
               <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
                 <p>{{ipfsHash.ipfsHash}}</p>
                 <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash.ipfsHash" >
@@ -65,7 +64,7 @@ methods: {
     reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
     reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
       this.buffer = Buffer(reader.result);
-      resolve(event.target.result);
+      return event.target.result;
   }
 },
   async onSubmit() {
@@ -140,7 +139,7 @@ methods: {
     setTimeout(async () => {
       await this.loadIpfsHash();
     }, 1)
-}
+},
 }
 </script>
 

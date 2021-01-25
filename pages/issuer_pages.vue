@@ -15,7 +15,7 @@
         Issuer
       </h2>
       <div class="submit">
-        <form v-on:submit="onSubmit" action='https://image-guardian.web.app/' method='post'>
+        <form v-on:submit="onSubmit">
           <div>証明書名： 
             <input type="text" v-model="nft.toName">
           </div>
@@ -24,8 +24,8 @@
           </div>
           <div class="address">発行先アドレス： 
             <ul >
-              <li v-for="(form, index) in pasform" :key="index">{{form.password}}
-                <input type="password"  placeholder="address" v-model="form.password">
+              <li v-for="(pasform, index) in pasforms" :key="index">{{}}
+                <input type="password" placeholder="address" v-model="pasform.password">
                 <button v-on:click="appendForm">追加</button>
                 <button v-on:click="deleteForm">削除</button>
               </li>
@@ -51,12 +51,10 @@ export default {
   data() { 
   return { 
   write: 0, // コントラクトから取得する数値 
-  pasform: [{
+  pasforms: [{
     password: '',
-  },{
-    password: '',
-  }],
-  nextPasform: 3,
+  },],
+  pasform: [],
   buffer: '',
   // forms: ['', ''],
   privateKey: '', //秘密鍵
@@ -90,7 +88,7 @@ methods: {
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
       // 証明証をnft化する
-    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.pasform, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
     // return upNft;
     this.write = upNft
@@ -98,18 +96,12 @@ methods: {
     // return this.loadIpfsHash();
   })
 },
-  async submitIpfsHash() {
-    for (var i = 0; i < length; i++) {
-      const certificate = await this.$contract.methods.certificates(i).call()
-      this.ipfsHashs.push(certificate)
-    }
- },
   appendForm() {
-    this.pasform.push(this.independentObejct());
+    this.pasforms.push(this.independentObejct());
     this.write++;
 },
   deleteForm(de) {
-    this.pasform.splice(de, 1);
+    this.pasforms.splice(de, 1);
     this.write--;
 },
   independentObejct() {
