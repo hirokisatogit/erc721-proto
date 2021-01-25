@@ -20,12 +20,12 @@
             <input type="text" v-model="nft.toName">
           </div>
           <div>発行枚数： 
-            <input type="number" v-model="nft.issueNumber">
+            <input type="number" v-model.number="nft.issueNumber">{{nft.issueNumber}}
           </div>
           <div class="address">発行先アドレス： 
             <ul >
-              <li v-for="(pasform, index) in pasforms" :key="index">{{}}
-                <input type="password" placeholder="address" v-model="pasform.password">
+              <li v-for="(onlypas, index) in pasforms" :key="index">{{pasforms.password}}
+                <input type="password" placeholder="address" v-model="pasforms.password">
                 <button v-on:click="appendForm">追加</button>
                 <button v-on:click="deleteForm">削除</button>
               </li>
@@ -52,11 +52,15 @@ export default {
   return { 
   write: 0, // コントラクトから取得する数値 
   pasforms: [{
+    id: 1,
     password: '',
   },],
-  pasform: [],
+  newPasform: '',
+  nextPasform: 4,
+
+  // pasform: [],
+  fileforms: [],
   buffer: '',
-  // forms: ['', ''],
   privateKey: '', //秘密鍵
   bufAddress: '', // アドレス
   nft: {
@@ -88,16 +92,22 @@ methods: {
       }
     let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
       // 証明証をnft化する
-    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.pasform, result[0].hash).send({ from: accounts[0] })
-      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
+      console.log(this.nft.toName);
+      console.log(this.nft.issueNumber);
+      console.log(this.pasforms.password);
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.pasforms.password, result[0].hash).send({ from: accounts[0] })
+      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
     // return upNft;
-    this.write = upNft
+    this.write = upNft;
       // ipfsHashの値をアップデートする
     // return this.loadIpfsHash();
   })
 },
   appendForm() {
-    this.pasforms.push(this.independentObejct());
+    this.pasforms.push({
+      id: this.nextPasform++,
+      password: '',
+    });
     this.write++;
 },
   deleteForm(de) {
@@ -106,6 +116,7 @@ methods: {
 },
   independentObejct() {
     return {
+      id:1,
       password: ''
   }
 },

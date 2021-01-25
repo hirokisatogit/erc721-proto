@@ -13,6 +13,7 @@
             Image Guardian
           </h1>
             <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
+              {{nft.toName}}
               <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
                 <p>{{ipfsHash.ipfsHash}}</p>
                 <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash.ipfsHash" >
@@ -47,7 +48,7 @@ export default {
   isSignedIn: false,
   privatekey: '', //秘密鍵
   address: '', // アドレス
-    nft: {
+  nft: {
     toName: '', // 送り先の名前
     issueNumber: 0, // 発行数
     toAddresses: [], // 送り先アドレス
