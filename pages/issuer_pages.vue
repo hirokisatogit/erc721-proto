@@ -24,7 +24,7 @@
           </div>
           <div class="address">発行先アドレス： 
             <ul >
-              <li v-for="(onlypas, index) in pasforms" :key="index">{{pasforms.password}}
+              <li v-for="pasform in pasforms" v-bind:pasform="pasform" v-bind:key="pasform.id">{{pasforms.password}}
                 <input type="password" placeholder="address" v-model="pasforms.password">
                 <button v-on:click="appendForm">追加</button>
                 <button v-on:click="deleteForm">削除</button>
@@ -50,17 +50,17 @@ import web3 from "~/plugins/web3.js";
 export default {
   data() { 
   return { 
-  write: 0, // コントラクトから取得する数値 
+  write: 0,
   pasforms: [{
     id: 1,
     password: '',
   },],
   newPasform: '',
-  nextPasform: 4,
+  nextPasform: 1,
 
-  // pasform: [],
+  addforms: [],
   fileforms: [],
-  buffer: '',
+  buffer: [],
   privateKey: '', //秘密鍵
   bufAddress: '', // アドレス
   nft: {
@@ -104,14 +104,14 @@ methods: {
   })
 },
   appendForm() {
-    this.pasforms.push({
-      id: this.nextPasform++,
-      password: '',
-    });
+    this.addforms.push({ id: this.nextPasform++, pasform: this.pasforms.password, });
+    this.pasforms.password = '';
     this.write++;
+    console.log(this.nextPasform);
+    console.log(this.addforms);
 },
   deleteForm(de) {
-    this.pasforms.splice(de, 1);
+    this.addforms.splice(de, 1);
     this.write--;
 },
   independentObejct() {
@@ -120,6 +120,9 @@ methods: {
       password: ''
   }
 },
+},
+  computed: {
+
 },
 }
 </script>
