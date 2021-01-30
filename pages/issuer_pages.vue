@@ -24,8 +24,8 @@
           </div>
           <div class="address">発行先アドレス： 
             <ul >
-              <li v-for="pasform in pasforms" v-bind:pasform="pasform" v-bind:key="pasform.id">{{pasforms.password}}
-                <input type="password" placeholder="address" v-model="pasforms.password">
+              <li v-for="pasform in pasforms" v-bind:password="pasforms.password" v-bind:key="pasform.password">{{pasforms.password}}
+                <input type="password" placeholder="address" autocomplete="off" v-model="pasforms.password">
                 <button v-on:click="appendForm">追加</button>
                 <button v-on:click="deleteForm">削除</button>
               </li>
@@ -60,7 +60,7 @@ export default {
 
   addforms: [],
   fileforms: [],
-  buffer: [],
+  buffer: '',
   privateKey: '', //秘密鍵
   bufAddress: '', // アドレス
   nft: {
@@ -104,21 +104,17 @@ methods: {
   })
 },
   appendForm() {
-    this.addforms.push({ id: this.nextPasform++, pasform: this.pasforms.password, });
-    this.pasforms.password = '';
-    this.write++;
+    let password = this.pasforms.password;
+    let addNumber = this.nextPasform++;
+    this.addforms.push({ id: addNumber, pasform: password });
+    // this.write++;
+    console.log(password);
     console.log(this.nextPasform);
     console.log(this.addforms);
 },
   deleteForm(de) {
     this.addforms.splice(de, 1);
     this.write--;
-},
-  independentObejct() {
-    return {
-      id:1,
-      password: ''
-  }
 },
 },
   computed: {
