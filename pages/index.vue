@@ -15,7 +15,7 @@
           <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
             <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index" >
               <p>{{ipfsHashs[0].nameOfCertificate}}</p>
-              <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHashs[0].ipfsHash" >
+              <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHashs[index].ipfsHash" >
             </slide>
           </carousel>
           <div class="links" v-if="!isSignedIn"> 
@@ -52,7 +52,6 @@ export default {
   isSignedIn: false,
   privatekey: '', // authentication用秘密鍵
   address: '', // authentication用アドレス
-  // id: 0,
   }
 },
 
@@ -150,26 +149,30 @@ async created() {
   justify-content: center;
   /* text-align: center; */
   /* padding-top: calc(9 / 16 * 100%); */
-  /* width: 980px; */
+  width: 980px;
   /* height: 500px; */
   box-shadow: 0px 0px 10px 0px rgba(3, 3, 3, 0.75);
 }
 .image {
   position: relative;
   height: 450px; 
-  width: 450px;
+  width: 400px;
   align-items: center;
   object-fit: cover;
   transition: opacity 1s;
 }
 #menu {
-  margin: 0;
-  width: auto;
+  position: absolute;
+  width: 800px;
   background-color: #565656;
   font-size: 16px;
   font-family: Tahoma, Geneva, sans-serif;
   font-weight: bold;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  top: 30px;
+  left: 440px;
   padding: 8px;
   border-radius: 8px;
   -webkit-border-radius: 8px;
@@ -177,8 +180,9 @@ async created() {
   -o-border-radius: 8px;
 }
 #menu li {
-  display: inline;
-  padding: 80px;
+  display: inline-block;
+  padding: 1px;
+  margin-right: 500px;
 }
 #menu a {
   color: #FFF;

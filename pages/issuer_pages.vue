@@ -131,15 +131,17 @@ methods: {
   text-align: center;
 }
 #menu {
-  position: relative;
-  /* top: 0px; */
-  bottom: 85px;
-  width: auto;
+  position: absolute;
+  width: 800px;
   background-color: #565656;
   font-size: 16px;
   font-family: Tahoma, Geneva, sans-serif;
   font-weight: bold;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  top: 30px;
+  left: 440px;
   padding: 8px;
   border-radius: 8px;
   -webkit-border-radius: 8px;
@@ -147,8 +149,9 @@ methods: {
   -o-border-radius: 8px;
 }
 #menu li {
-  display: inline;
-  padding: 80px;
+  display: inline-block;
+  padding: 1px;
+  margin-right: 500px;
 }
 #menu a {
   color: #FFF;
