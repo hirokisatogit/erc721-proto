@@ -12,15 +12,14 @@
           <h1 class="title">
             Image Guardian
           </h1>
-            <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
-              {{nft.toName}}
-              <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index">
-                <p>{{ipfsHash.ipfsHash}}</p>
-                <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHash.ipfsHash" >
-              </slide>
-            </carousel>
+          <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
+            <slide v-for="(ipfsHash, index) in this.ipfsHashs" :key="index" >
+              <p>{{ipfsHashs[0].nameOfCertificate}}</p>
+              <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsHashs[0].ipfsHash" >
+            </slide>
+          </carousel>
           <div class="links" v-if="!isSignedIn"> 
-            <button @click="signIn()">Sign In</button>  
+            <button @click="signIn()">Sign In</button>
           </div> 
       </div>
     </div>
@@ -44,67 +43,45 @@ export default {
   return {
   write: 0, // コントラクトから取得する数値 
   ipfsHashs: [],
+    // certificateId: 0,
+    // _nameOfCertificate: '', //発行先の名前
+    // _ipfsHash: '', //ipfsのHash値 
+    // msgSender: '', //発行先アドレス
+    // now: 0, //発行日
   buffer: '',
   isSignedIn: false,
-  privatekey: '', //秘密鍵
-  address: '', // アドレス
-  nft: {
-    toName: '', // 送り先の名前
-    issueNumber: 0, // 発行数
-    toAddresses: [], // 送り先アドレス
-  },
+  privatekey: '', // authentication用秘密鍵
+  address: '', // authentication用アドレス
+  // id: 0,
   }
 },
 
 methods: {
 
-  async captureFile(event) {
-    event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
-    const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
-    const reader = await new window.FileReader(); // FileReader はデータ読み込みを目的としたオブジェクト
-    reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
-    reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
-      this.buffer = Buffer(reader.result);
-      return event.target.result;
-  }
-},
-  async onSubmit() {
-    event.preventDefault()
-    ipfs.files.add(this.buffer, async (error, result) => {
-      if(error) {
-        console.error(error)
-        return
-      }
-    let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      // 証明証をnft化する
-    // let newAddresses = []
-    // let arrayAddresses = newAddresses.push(this.bufAddress)
-    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.nft.toAddresses, result[0].hash).send({ from: accounts[0] })
-      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、result[0].hash
-    this.write = upNft
-      // ipfsHashの値をアップデートする
-    return this.loadIpfsHash();
-  })
-},
   loadIpfsHash: async function() {
-    let accounts = await this.$web3.eth.getAccounts()
-    console.log(accounts[0]);
-    const id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
-    for (var i = 0; i < id; i++) {
+    // let certificateID = this.certificateId
+    // let nameOfCertificate = this._nameOfCertificate
+    // let ipfsHash = this._ipfsHash
+    // let issuer = this.msgSender
+    // let date = this.now
+    const accounts = await this.$web3.eth.getAccounts()
+    const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
+    for (var i = 0; i < Id; i++) {
       const certificate = await this.$contract.methods.certificates(i).call()
-      this.ipfsHashs.push(certificate)
+      // certificatesは配列ゆえにコントラクトメソッドとして呼び出す事はできない為、引数は i だけで良いという事なのだろうか...
+      this.ipfsHashs.push(certificate);
     }
 },
-  signIn: function() { 
+  signIn: function() {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider); 
 } 
 },
-  components: {
+components: {
     Carousel,
     Slide
 },
-  mounted() {
+mounted() {
     if (!firebase.apps.length) {
     var firebaseConfig = {
     apiKey: process.env.APIKEY, 
@@ -112,7 +89,7 @@ methods: {
     }; 
     // Initialize Firebase 
     firebase.initializeApp(firebaseConfig); 
-    console.log("Current Block Number"); 
+    // console.log("Current Block Number"); 
     this.$web3.eth.getBlockNumber().then(console.log);  
   };
 
@@ -132,11 +109,11 @@ methods: {
     let errorMessage = error.message; 
     console.log(errorMessage); 
   }); 
-    console.log("Current Block Number"); 
+    // console.log("Current Block Number"); 
     this.$web3.eth.getBlockNumber().then(console.log);  
   }
 },
-  async created() { 
+async created() { 
     setTimeout(async () => {
       await this.loadIpfsHash();
     }, 1)

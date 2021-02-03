@@ -20,14 +20,14 @@
             <input type="text" v-model="nft.toName">
           </div>
           <div>発行枚数： 
-            <input type="number" v-model.number="nft.issueNumber">{{nft.issueNumber}}
+            <input type="number" v-model.number="nft.issueNumber">
           </div>
           <div class="address">発行先アドレス： 
-            <ul >
-              <li v-for="pasform in pasforms" v-bind:password="pasforms.password" v-bind:key="pasform.password">{{pasforms.password}}
-                <input type="password" placeholder="address" autocomplete="off" v-model="pasforms.password">
-                <button v-on:click="appendForm">追加</button>
-                <button v-on:click="deleteForm">削除</button>
+            <ul>
+              <li v-for="pasform in pasforms" v-bind:toAddresses="pasforms.toAddresses" v-bind:key="pasform.toAddresses">
+                <input type="password" placeholder="address" autocomplete="off" v-model="pasforms.toAddresses">
+                <!-- <button v-on:click="appendForm">追加</button> -->
+                <!-- <button v-on:click="deleteForm">削除</button> -->
               </li>
             </ul>
           </div>
@@ -53,7 +53,7 @@ export default {
   write: 0,
   pasforms: [{
     id: 1,
-    password: '',
+    toAddresses: '',
   },],
   newPasform: '',
   nextPasform: 1,
@@ -94,8 +94,9 @@ methods: {
       // 証明証をnft化する
       console.log(this.nft.toName);
       console.log(this.nft.issueNumber);
-      console.log(this.pasforms.password);
-    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, this.pasforms.password, result[0].hash).send({ from: accounts[0] })
+      console.log(this.pasforms.toAddresses);
+    let _toAddresses = this.pasforms.toAddresses
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, _toAddresses, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
     // return upNft;
     this.write = upNft;
@@ -103,22 +104,19 @@ methods: {
     // return this.loadIpfsHash();
   })
 },
-  appendForm() {
-    let password = this.pasforms.password;
-    let addNumber = this.nextPasform++;
-    this.addforms.push({ id: addNumber, pasform: password });
-    // this.write++;
-    console.log(password);
-    console.log(this.nextPasform);
-    console.log(this.addforms);
-},
-  deleteForm(de) {
-    this.addforms.splice(de, 1);
-    this.write--;
-},
-},
-  computed: {
-
+//   appendForm() {
+//     let password = this.pasforms.toAddresses;
+//     let addNumber = this.nextPasform++;
+//     this.addforms.push({ id: addNumber, pasform: password });
+//     // this.write++;
+//     console.log(password);
+//     console.log(this.nextPasform);
+//     console.log(this.addforms);
+// },
+//   deleteForm(de) {
+//     this.addforms.splice(de, 1);
+//     this.write--;
+// },
 },
 }
 </script>

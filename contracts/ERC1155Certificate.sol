@@ -7,7 +7,6 @@ contract ERC1155Certificate is ERC1155("test") {
 
   uint256 internal certificateId = 0;
   mapping (address => uint[]) public myCertificateId;
-  // mapping (uint256 => address) public certificateIssuer; // operatorが用意されているからいらないかも
 
   struct Certificate {
     uint256 id;
@@ -21,19 +20,18 @@ contract ERC1155Certificate is ERC1155("test") {
 
   constructor() public { }
 
-  function issueCertificate(string calldata _nameOfCertificate, uint256 numberOfCertificate, address[] calldata _toAddresses, string calldata _ipfsHash) external {
+  function issueCertificate(string calldata _nameOfCertificate, uint256 numberOfCertificate, address _toAddresses, string calldata _ipfsHash) external {
     bytes memory _ipfsHashtoBytes = bytes(_ipfsHash);
     certificateId = certificateId.add(1);
     _mint(msg.sender, certificateId, numberOfCertificate, _ipfsHashtoBytes);
     certificates.push(Certificate(certificateId, _nameOfCertificate, _ipfsHash, msg.sender, now));
     for (uint i = 0; i < numberOfCertificate; i++ ) {
-      safeTransferFrom(msg.sender, _toAddresses[i], certificateId, 1, _ipfsHashtoBytes);
-      myCertificateId[_toAddresses[i]].push(certificateId);
+      safeTransferFrom(msg.sender, _toAddresses, certificateId, 1, _ipfsHashtoBytes);
+      myCertificateId[_toAddresses].push(certificateId);
     }
   }
 
   function getMyCertificateId(address _certificateHolder) external view returns (uint[] memory) {
     return myCertificateId[_certificateHolder];
   }
-
 }

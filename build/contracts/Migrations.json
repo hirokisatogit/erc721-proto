@@ -931,12 +931,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x5133459a2B5a9E03eC12a9eCCd0658A306c48F50",
-      "transactionHash": "0x21871ac2ca0373cbc86134aaa261164ca27f1f0672f6b5ec672d5e42121b592f"
+      "address": "0x6A10ef0587e3254a5423EaD7570eDF056D14E5e8",
+      "transactionHash": "0xed6368d649b9fbf7baec4b490ba7cc88ccb648f47335b6803154026d74be3cc4"
     }
   },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-01-22T07:32:24.533Z",
+  "updatedAt": "2021-02-02T15:51:51.599Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
