@@ -16,16 +16,16 @@
       </h2>
       <div class="submit">
         <form v-on:submit="onSubmit">
-          <div>証明書名： 
-            <input type="text" v-model="nft.toName">
+          <div class="form"> 証明書名:
+            <input type="text" placeholder="証明書名" v-model="nft.toName">
           </div>
-          <div>発行枚数： 
+          <div class="form">発行枚数:
             <input type="number" v-model.number="nft.issueNumber">
           </div>
-          <div class="address">発行先アドレス： 
+          <div class="form">
             <ul>
               <li v-for="pasform in pasforms" v-bind:toAddresses="pasforms.toAddresses" v-bind:key="pasform.toAddresses">
-                <input type="password" placeholder="address" autocomplete="off" v-model="pasforms.toAddresses">
+                発行先アドレス:<input class="password" type="password" placeholder="発行先アドレス" v-model="pasforms.toAddresses" v-show-password-input>
                 <!-- <button v-on:click="appendForm">追加</button> -->
                 <!-- <button v-on:click="deleteForm">削除</button> -->
               </li>
@@ -100,8 +100,6 @@ methods: {
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
     // return upNft;
     this.write = upNft;
-      // ipfsHashの値をアップデートする
-    // return this.loadIpfsHash();
   })
 },
 //   appendForm() {
@@ -176,19 +174,16 @@ methods: {
 }
 .title {
   position: relative;
-  font-family:
-    sans-serif;
+  font-family:sans-serif;
   top: 100px;
   display: block;
   font-weight: 300;
   font-size: 100px;
   color: #35495e;
-  /* letter-spacing: 1px; */
 }
 .title2 {
   position: relative;
-    font-family:
-    sans-serif;
+  font-family:sans-serif;
   top: 100px;
   margin-bottom: 100px;
   display: block;
@@ -199,13 +194,29 @@ methods: {
 .submit {
   justify-content: center;
 }
+.form {
+  width: 800px;
+  padding: 15px;
+  background:#555454;
+  margin-bottom:25px;
+  /* -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  transition: all 0.1s; */
+  border-radius: 10px;
+}
+.form:hover{
+  border:0.1px solid #04f76d;
+}
+.password {
+  margin-left: 10px;
+  margin-right: 85px;
+}
 .btn {
-  flex: 1 1 auto;
-  margin: 10px;
-  padding: 30px;
+  /* flex: 1 1 auto; */
+  /* margin: 10px; */
+  /* padding: 30px; */
   text-align: center;
-  text-transform: uppercase;
-  transition: 0.5s;
+  /* transition: 0.5s; */
   color: rgb(3, 0, 0);
   border-radius: 10px;
 }

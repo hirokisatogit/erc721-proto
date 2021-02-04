@@ -19,7 +19,7 @@
             </slide>
           </carousel>
           <div class="links" v-if="!isSignedIn"> 
-            <button @click="signIn()">Sign In</button>
+            <button class="button" @click="signIn()">Sign In</button>
           </div> 
       </div>
     </div>
@@ -131,8 +131,7 @@ async created() {
   text-align: center;
 }
 .title {
-  font-family:
-    sans-serif;
+  font-family:sans-serif;
   /* height: 800px; */
   margin-bottom: 70px;
   padding-top: 10px;
@@ -204,5 +203,21 @@ async created() {
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   -o-border-radius: 20px;
+}
+.links {
+  cursor:pointer;
+  color: rgb(3, 0, 0);
+}
+.button {
+  font-family:sans-serif;
+  width: 100px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.button:hover {
+  background-color: aquamarine;
 }
 </style>
