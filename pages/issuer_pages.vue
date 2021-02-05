@@ -25,7 +25,7 @@
           <div class="form">
             <ul>
               <li v-for="pasform in pasforms" v-bind:toAddresses="pasforms.toAddresses" v-bind:key="pasform.toAddresses">
-                発行先アドレス:<input class="password" type="password" placeholder="発行先アドレス" v-model="pasforms.toAddresses" v-show-password-input>
+                発行先アドレス:<input class="password" type="password" placeholder="発行先アドレス" v-model="pasforms.toAddresses">
                 <!-- <button v-on:click="appendForm">追加</button> -->
                 <!-- <button v-on:click="deleteForm">削除</button> -->
               </li>
@@ -53,20 +53,15 @@ export default {
   write: 0,
   pasforms: [{
     id: 1,
-    toAddresses: '',
+    toAddresses: '', // 送り先アドレス
   },],
-  newPasform: '',
   nextPasform: 1,
 
   addforms: [],
-  fileforms: [],
   buffer: '',
-  privateKey: '', //秘密鍵
-  bufAddress: '', // アドレス
   nft: {
     toName: '', // 送り先の名前
     issueNumber: 0, // 発行数
-    toAddresses: [], // 送り先アドレス
   },
 }
 }, 
@@ -90,7 +85,7 @@ methods: {
         console.error(error)
         return
       }
-    let accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
+    const accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
       // 証明証をnft化する
       console.log(this.nft.toName);
       console.log(this.nft.issueNumber);

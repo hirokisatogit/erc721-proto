@@ -37,6 +37,13 @@ $ direnv allow
 ## Website
 https://image-guardian.web.app/
 
+# User's Manual
+```
+
+You need to install Metamask in your browser and connect it to your virtual network.
+Start Ganache and connect the blockchain of Ganache to Metamask.
+
+```
 
 
 
