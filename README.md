@@ -37,11 +37,14 @@ $ direnv allow
 ## Website
 https://image-guardian.web.app/
 
-# User's Manual
+# Usage
 ```
 
 You need to install Metamask in your browser and connect it to your virtual network.
+
 Start Ganache and connect the blockchain of Ganache to Metamask.
+
+Image Guardian Issuer allows you to specify the name of the certificate, the number of certificates to be issued and the destination.
 
 ```
 
