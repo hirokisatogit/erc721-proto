@@ -24,14 +24,9 @@
 </template>
 
 <script>
-import Web3 from "web3";
-import firebase from 'firebase';
-import sha256 from "js-sha256";
-import toContract from "~/plugins/toContract.js";
 import Vue from 'vue';
 import VueCarousel from 'vue-carousel';
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
-import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
 
