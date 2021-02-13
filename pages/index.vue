@@ -49,12 +49,9 @@ methods: {
   loadIpfsHash: async function() {
     const accounts = await this.$web3.eth.getAccounts()
     const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
-    console.log(Id);
     for (var i = 0; i < Id.length; i++) {
-      console.log(1);
       const certificate = await this.$contract.methods.certificates(i).call()
       this.ipfsHashs.push(certificate);
-      console.log(this.ipfsHashs[i]);
     }
 },
   signIn: function() {

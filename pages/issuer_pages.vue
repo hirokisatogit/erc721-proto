@@ -54,7 +54,6 @@ export default {
         toAddresses: '', // 送り先アドレス
       },],
       nextPasform: 1,
-
       addforms: [],
       buffer: '',
       nft: {
