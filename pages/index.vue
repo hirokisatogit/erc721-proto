@@ -46,20 +46,16 @@ export default {
   },
 
 methods: {
-  loadIpfsHash: async function() {
-    const accounts = await this.$web3.eth.getAccounts()
-    const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
+  loadIpfsHash: async function() { // 送信された証明証データを取得するための関数
+    const accounts = await this.$web3.eth.getAccounts() // アカウント取得メソッドをaccountsに格納
+    const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call() // ここでアカウントデータを取得
     for (var i = 0; i < Id.length; i++) {
-      const certificate = await this.$contract.methods.certificates(i).call()
-      this.ipfsHashs.push(certificate);
+      const certificate = await this.$contract.methods.certificates(i).call() // 送られてきた証明証の名前や日付などのデータcertificateに格納
+      this.ipfsHashs.push(certificate); // データをpush
     }
 },
-  signIn: function() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithRedirect(provider); 
 },
-},
-  async created() { 
+  async created() { // ページローディングと同時にloadIpfsHash発火させることで、証明証取得可能になる
     setTimeout(async () => {
       await this.loadIpfsHash();
     }, 1)

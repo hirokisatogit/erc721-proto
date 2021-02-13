@@ -6,7 +6,23 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue src --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --ext .js src --fix",
+      "git add"
+    ],
+    "*.vue": [
+      "eslint --ext .vue src --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.3.0",

@@ -66,8 +66,8 @@ export default {
 methods: {
   async captureFile(event) {
     event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
-    const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
-    const reader = await new window.FileReader(); // FileReader はデータ読み込みを目的としたオブジェクト
+    const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得できる
+    const reader = await new window.FileReader(); // FileReader はデータ読み込みできる
     reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
     reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
       this.buffer = Buffer(reader.result);
@@ -76,13 +76,13 @@ methods: {
 },
   async onSubmit(event) {
     event.preventDefault()
-    ipfs.files.add(this.buffer, async (error, result) => {
+    ipfs.files.add(this.buffer, async (error, result) => { // IPFSを用いて証明証を発行する部分
       if(error) {
         console.error(error)
         return
       }
     const accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-    let _toAddresses = this.pasforms.toAddresses
+    let _toAddresses = this.pasforms.toAddresses 
       // 証明証をnft化する
     let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, _toAddresses, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
