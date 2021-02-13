@@ -3,16 +3,13 @@
     <div class="top">
       <div>
         <nav id="menu">
-          <div class="main-nav-list active-element">
-            <ul>
-              <li><a href="./issuer_pages" class="active-link">Issuer</a></li>
-            </ul>
-          </div>
+          <ul>
+            <li><a href="./issuer_pages" class="active-link">IssuerPage</a></li>
+          </ul>
         </nav>
           <h1 class="title">
-            Image Guardian
+            Image Guardian User
           </h1>
-          <button class="update" v-on:click="loadIpfsHash">更新</button>
           <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
             <slide v-for="(ipfsData, index) in this.ipfsHashs" :key="index" >
               <p>
@@ -21,9 +18,6 @@
               <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsData.ipfsHash" >
             </slide>
           </carousel>
-        <div class="links" v-if="!isSignedIn">
-          <button class="button" @click="signIn()">Sign In</button>
-        </div> 
       </div>
     </div>
   </body>
@@ -34,46 +28,33 @@ import Web3 from "web3";
 import firebase from 'firebase';
 import sha256 from "js-sha256";
 import toContract from "~/plugins/toContract.js";
-import { Carousel, Slide } from 'vue-carousel';
-// import Carousel from '~/node_modules/vue-carousel/src/Carousel.vue';
-// import Slide from '~/node_modules/vue-carousel/src/Slide.vue';
+import Vue from 'vue';
+import VueCarousel from 'vue-carousel';
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
 
+Vue.use(VueCarousel);
+
 export default {
-  components: {
-    Carousel,
-    Slide
-},
   data() { 
-  return {
-  write: 0, // コントラクトから取得する数値 
-  ipfsHashs: [],
-    // certificateId: 0,
-    // _nameOfCertificate: '', //発行先の名前
-    // _ipfsHash: '', //ipfsのHash値 
-    // msgSender: '', //発行先アドレス
-    // now: 0, //発行日
-  buffer: '',
-  isSignedIn: false,
-  privatekey: '', // authentication用秘密鍵
-  address: '', // authentication用アドレス
-  }
-},
+    return {
+      ipfsHashs: [],
+      buffer: '',
+    }
+  },
 
 methods: {
-
   loadIpfsHash: async function() {
     const accounts = await this.$web3.eth.getAccounts()
     const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call()
-    for (var i = 0; i < Id; i++) {
+    console.log(Id);
+    for (var i = 0; i < Id.length; i++) {
+      console.log(1);
       const certificate = await this.$contract.methods.certificates(i).call()
-      // const current = await this.$contract.methods.getCurrent(date).call()
-      // certificatesは配列ゆえにコントラクトメソッドとして呼び出す事はできない為、引数は i だけで良いという事なのだろうか...
       this.ipfsHashs.push(certificate);
-      console.log(this.ipfsHashs[i])
+      console.log(this.ipfsHashs[i]);
     }
 },
   signIn: function() {
@@ -81,39 +62,7 @@ methods: {
     firebase.auth().signInWithRedirect(provider); 
 },
 },
-  mounted() {
-    if (!firebase.apps.length) {
-    var firebaseConfig = {
-    apiKey: process.env.APIKEY, 
-    authDomain: process.env.AUTHDOMAIN, 
-    }; 
-    // Initialize Firebase 
-    firebase.initializeApp(firebaseConfig); 
-    // console.log("Current Block Number"); 
-    this.$web3.eth.getBlockNumber().then(console.log);  
-  };
-
-  if (!firebase.apps.length) { 
-    var self = this; 
-    firebase.auth().getRedirectResult().then(function(result) { 
-    if (result.credential) { 
-    let user = result.user; 
-    self.isSignedIn = true; 
-    console.log(user.uid);
-    self.privateKey = "0x" + sha256.hex(user.uid); 
-    self.address = self.$web3.eth.accounts.privateKeyToAccount(self.privateKey).address;
-    self.$web3.eth.defaultAccount = self.address;
-    console.log("Address:" + self.address);
-    } 
-  }).catch(function(error) { 
-    let errorMessage = error.message; 
-    console.log(errorMessage); 
-  }); 
-    // console.log("Current Block Number"); 
-    this.$web3.eth.getBlockNumber().then(console.log);  
-  }
-},
-  async beforeMount() { 
+  async created() { 
     setTimeout(async () => {
       await this.loadIpfsHash();
     }, 1)
@@ -133,24 +82,21 @@ methods: {
 }
 .title {
   font-family:sans-serif;
-  /* height: 800px; */
   margin-bottom: 70px;
   padding-top: 10px;
   display: block;
   font-weight: 300;
   font-size: 100px;
   color: #35495e;
-  /* letter-spacing: 1px; */
 }
 .contents {
-  /* display: block; */
-  /* overflow: hidden; */
   position: relative;
   justify-content: center;
-  /* text-align: center; */
-  /* padding-top: calc(9 / 16 * 100%); */
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   width: 980px;
-  /* height: 500px; */
   box-shadow: 0px 0px 10px 0px rgba(3, 3, 3, 0.75);
 }
 .image {

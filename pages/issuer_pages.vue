@@ -2,11 +2,9 @@
   <div class="top">
     <div>
       <nav id="menu">
-        <div class="main-nav-list active-element">
-          <ul>
-            <li><a href="/" class="active-link">User</a></li>
-          </ul>
-        </div>
+        <ul>
+          <li><a href="/" class="active-link">UserPage</a></li>
+        </ul>
       </nav>
       <h1 class="title">
         Image Guardian
@@ -49,25 +47,24 @@ import web3 from "~/plugins/web3.js";
 
 export default {
   data() { 
-  return { 
-  write: 0,
-  pasforms: [{
-    id: 1,
-    toAddresses: '', // 送り先アドレス
-  },],
-  nextPasform: 1,
+    return { 
+      write: 0,
+      pasforms: [{
+        id: 1,
+        toAddresses: '', // 送り先アドレス
+      },],
+      nextPasform: 1,
 
-  addforms: [],
-  buffer: '',
-  nft: {
-    toName: '', // 送り先の名前
-    issueNumber: 0, // 発行数
-  },
-}
-}, 
+      addforms: [],
+      buffer: '',
+      nft: {
+        toName: '', // 送り先の名前
+        issueNumber: 0, // 発行数
+      },
+    }
+  }, 
 
 methods: {
-
   async captureFile(event) {
     event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
     const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得する      
@@ -86,15 +83,10 @@ methods: {
         return
       }
     const accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
-      // 証明証をnft化する
-      console.log(this.nft.toName);
-      console.log(this.nft.issueNumber);
-      console.log(this.pasforms.toAddresses);
     let _toAddresses = this.pasforms.toAddresses
+      // 証明証をnft化する
     let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, _toAddresses, result[0].hash).send({ from: accounts[0] })
       // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
-    // return upNft;
-    this.write = upNft;
   })
 },
 //   appendForm() {
@@ -194,9 +186,6 @@ methods: {
   padding: 15px;
   background:#555454;
   margin-bottom:25px;
-  /* -webkit-transition: all 0.1s;
-  -moz-transition: all 0.1s;
-  transition: all 0.1s; */
   border-radius: 10px;
 }
 .form:hover{
@@ -207,11 +196,7 @@ methods: {
   margin-right: 85px;
 }
 .btn {
-  /* flex: 1 1 auto; */
-  /* margin: 10px; */
-  /* padding: 30px; */
   text-align: center;
-  /* transition: 0.5s; */
   color: rgb(3, 0, 0);
   border-radius: 10px;
 }

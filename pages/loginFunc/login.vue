@@ -11,10 +11,10 @@ import firebase from 'firebase';
 
 export default {
   data() {
-  return {
-  isSignedIn: false,
-  privatekey: '', // authentication用秘密鍵
-  address: '', // authentication用アドレス
+    return {
+      isSignedIn: false,
+      privatekey: '', // authentication用秘密鍵
+      address: '', // authentication用アドレス
     }
   },
 methods: {
@@ -26,9 +26,9 @@ methods: {
 
 mounted() {
     if (!firebase.apps.length) {
-    var firebaseConfig = {
-    apiKey: process.env.APIKEY, 
-    authDomain: process.env.AUTHDOMAIN, 
+      var firebaseConfig = {
+      apiKey: process.env.APIKEY, 
+      authDomain: process.env.AUTHDOMAIN, 
     }; 
     // Initialize Firebase 
     firebase.initializeApp(firebaseConfig); 
@@ -39,13 +39,13 @@ mounted() {
     var self = this; 
     firebase.auth().getRedirectResult().then(function(result) { 
     if (result.credential) { 
-    let user = result.user; 
-    self.isSignedIn = true; 
-    console.log(user.uid);
-    self.privateKey = "0x" + sha256.hex(user.uid); 
-    self.address = self.$web3.eth.accounts.privateKeyToAccount(self.privateKey).address;
-    self.$web3.eth.defaultAccount = self.address;
-    console.log("Address:" + self.address);
+      let user = result.user; 
+      self.isSignedIn = true; 
+      console.log(user.uid);
+      self.privateKey = "0x" + sha256.hex(user.uid); 
+      self.address = self.$web3.eth.accounts.privateKeyToAccount(self.privateKey).address;
+      self.$web3.eth.defaultAccount = self.address;
+      console.log("Address:" + self.address);
     } 
   }).catch(function(error) { 
     let errorMessage = error.message; 

@@ -34,8 +34,4 @@ contract ERC1155Certificate is ERC1155("test") {
   function getMyCertificateId(address _certificateHolder) external view returns (uint[] memory) {
     return myCertificateId[_certificateHolder];
   }
-
-  function getCurrent() external view returns (uint) {
-    return now;
-  }
 }
