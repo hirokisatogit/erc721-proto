@@ -7,17 +7,17 @@
             <li><a href="./issuer_pages" class="active-link">IssuerPage</a></li>
           </ul>
         </nav>
-          <h1 class="title">
-            Image Guardian User
-          </h1>
-          <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
-            <slide v-for="(ipfsData, index) in this.ipfsHashs" :key="index" >
-              <p>
-                <!-- 発行日:{{ipfsData.issuedate}} -  -->
-                証明証名:{{ipfsData.nameOfCertificate}}</p>
-              <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsData.ipfsHash" >
-            </slide>
-          </carousel>
+        <h1 class="title">
+          Image Guardian User
+        </h1>
+        <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
+          <slide v-for="(ipfsData, index) in this.ipfsHashs" :key="index" >
+            <p>
+              <!-- 発行日:{{ipfsData.issuedate}} -  -->
+              証明証名:{{ipfsData.nameOfCertificate}}</p>
+            <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsData.ipfsHash" >
+          </slide>
+        </carousel>
       </div>
     </div>
   </body>

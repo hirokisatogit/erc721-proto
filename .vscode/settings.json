@@ -1,6 +1,6 @@
 {
 // デフォルトのコード整形を無効化
-"editor.formatOnSave": false,
+"editor.formatOnSave": true,
 
 // ESLint 自動フォーマット有効化
 "eslint.autoFixOnSave": true,
