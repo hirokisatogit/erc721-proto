@@ -7,15 +7,24 @@
             <li><a href="./issuer_pages" class="active-link">IssuerPage</a></li>
           </ul>
         </nav>
-        <h1 class="title">
-          Image Guardian User
-        </h1>
-        <carousel class="contents" :per-page="1" :autoplay="true" :loop="true" :pagination-padding="5" :autoplay-timeout="4000">
-          <slide v-for="(ipfsData, index) in this.ipfsHashs" :key="index" >
+        <h1 class="title">Image Guardian User</h1>
+        <carousel
+          class="contents"
+          :per-page="1"
+          :autoplay="true"
+          :loop="true"
+          :pagination-padding="5"
+          :autoplay-timeout="4000"
+        >
+          <slide v-for="(ipfsData, index) in this.ipfsHashs" :key="index">
             <p>
               <!-- 発行日:{{ipfsData.issuedate}} -  -->
-              証明証名:{{ipfsData.nameOfCertificate}}</p>
-            <img class="image" :src="'https://ipfs.io/ipfs/' + ipfsData.ipfsHash" >
+              証明証名:{{ ipfsData.nameOfCertificate }}
+            </p>
+            <img
+              class="image"
+              :src="'https://ipfs.io/ipfs/' + ipfsData.ipfsHash"
+            />
           </slide>
         </carousel>
       </div>
@@ -25,11 +34,11 @@
 
 <script>
 import Web3 from "web3";
-import firebase from 'firebase';
+import firebase from "firebase";
 import sha256 from "js-sha256";
 import toContract from "~/plugins/toContract.js";
-import Vue from 'vue';
-import VueCarousel from 'vue-carousel';
+import Vue from "vue";
+import VueCarousel from "vue-carousel";
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
 import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
@@ -38,29 +47,33 @@ import web3 from "~/plugins/web3.js";
 Vue.use(VueCarousel);
 
 export default {
-  data() { 
+  data() {
     return {
       ipfsHashs: [],
-      buffer: '',
-    }
+      buffer: "",
+    };
   },
 
-methods: {
-  loadIpfsHash: async function() { // 送信された証明証データを取得するための関数
-    const accounts = await this.$web3.eth.getAccounts() // アカウント取得メソッドをaccountsに格納
-    const Id = await this.$contract.methods.getMyCertificateId(accounts[0]).call() // ここでアカウントデータを取得
-    for (var i = 0; i < Id.length; i++) {
-      const certificate = await this.$contract.methods.certificates(i).call() // 送られてきた証明証の名前や日付などのデータcertificateに格納
-      this.ipfsHashs.push(certificate); // データをpush
-    }
-},
-},
-  async created() { // ページローディングと同時にloadIpfsHash発火させることで、証明証取得可能になる
+  methods: {
+    loadIpfsHash: async function () {
+      // 送信された証明証データを取得するための関数
+      const accounts = await this.$web3.eth.getAccounts(); // アカウント取得メソッドをaccountsに格納
+      const Id = await this.$contract.methods
+        .getMyCertificateId(accounts[0])
+        .call(); // ここでアカウントデータを取得
+      for (var i = 0; i < Id.length; i++) {
+        const certificate = await this.$contract.methods.certificates(i).call(); // 送られてきた証明証の名前や日付などのデータcertificateに格納
+        this.ipfsHashs.push(certificate); // データをpush
+      }
+    },
+  },
+  async created() {
+    // ページローディングと同時にloadIpfsHash発火させることで、証明証取得可能になる
     setTimeout(async () => {
       await this.loadIpfsHash();
-    }, 1)
+    }, 1);
   },
-}
+};
 </script>
 
 <style>
@@ -74,7 +87,7 @@ methods: {
   text-align: center;
 }
 .title {
-  font-family:sans-serif;
+  font-family: sans-serif;
   margin-bottom: 70px;
   padding-top: 10px;
   display: block;
@@ -94,7 +107,7 @@ methods: {
 }
 .image {
   position: relative;
-  height: 450px; 
+  height: 450px;
   width: 400px;
   align-items: center;
   object-fit: cover;
@@ -124,32 +137,32 @@ methods: {
   margin-right: 500px;
 }
 #menu a {
-  color: #FFF;
+  color: #fff;
   padding: 10px;
   text-decoration: none;
 }
 #menu a:hover {
-  background-color: #1B191B;
-  color: #FFF;
+  background-color: #1b191b;
+  color: #fff;
   border-radius: 20px;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   -o-border-radius: 20px;
 }
 #menu li .active {
-  background-color: #1B191B;
-  color: #FFF;
+  background-color: #1b191b;
+  color: #fff;
   border-radius: 20px;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   -o-border-radius: 20px;
 }
 .links {
-  cursor:pointer;
+  cursor: pointer;
   color: rgb(3, 0, 0);
 }
 .button {
-  font-family:sans-serif;
+  font-family: sans-serif;
   width: 100px;
   text-align: center;
   text-transform: uppercase;
