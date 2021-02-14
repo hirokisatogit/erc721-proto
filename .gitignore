@@ -71,6 +71,18 @@ layouts
 
 nuxt.config.js
 
+plugins/getWeb3.js
+
+plugins/vue-image-previewer.js
+
+pages/loginFunc
+
+static
+
+test
+
+layouts
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 

@@ -20,19 +20,8 @@
           </div>
           <div class="form">
             <ul>
-              <li
-                v-for="pasform in pasforms"
-                v-bind:toAddresses="pasforms.toAddresses"
-                v-bind:key="pasform.toAddresses"
-              >
-                発行先アドレス:<input
-                  class="password"
-                  type="password"
-                  placeholder="発行先アドレス"
-                  v-model="pasforms.toAddresses"
-                />
-                <!-- <button v-on:click="appendForm">追加</button> -->
-                <!-- <button v-on:click="deleteForm">削除</button> -->
+              <li v-for="pasform in pasforms" v-bind:toAddresses="pasforms.toAddresses" v-bind:key="pasform.toAddresses">
+                発行先アドレス:<input class="password" type="password" placeholder="発行先アドレス" v-model="pasforms.toAddresses">
               </li>
             </ul>
           </div>
@@ -45,10 +34,7 @@
 </template>
 
 <script>
-import Vue from "vue/dist/vue.esm.js";
 import Certificate1155Contract from "~/build/contracts/ERC1155Certificate.json";
-import Web3 from "web3";
-import getWeb3 from "~/plugins/getWeb3.js";
 import ipfs from "~/plugins/ipfs.js";
 import web3 from "~/plugins/web3.js";
 
@@ -72,55 +58,33 @@ export default {
     };
   },
 
-  methods: {
-    async captureFile(event) {
-      event.preventDefault(); // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
-      const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得できる
-      const reader = await new window.FileReader(); // FileReader はデータ読み込みできる
-      reader.readAsArrayBuffer(file); // readAsArrayBuffer() でfileオブジェクトを読み込む
-      reader.onloadend = () => {
-        // onloadend はデータ読み込み時に発生するイベントハンドラ
-        this.buffer = Buffer(reader.result);
-        return event.target.result;
-      };
-    },
-    async onSubmit(event) {
-      event.preventDefault();
-      ipfs.files.add(this.buffer, async (error, result) => {
-        // IPFSを用いて証明証を発行する部分
-        if (error) {
-          console.error(error);
-          return;
-        }
-        const accounts = await this.$web3.eth.getAccounts(); // MetaMaskで使っているアカウントの取得
-        let _toAddresses = this.pasforms.toAddresses;
-        // 証明証をnft化する
-        let upNft = await this.$contract.methods
-          .issueCertificate(
-            this.nft.toName,
-            this.nft.issueNumber,
-            _toAddresses,
-            result[0].hash
-          )
-          .send({ from: accounts[0] });
-        // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
-      });
-    },
-    //   appendForm() {
-    //     let password = this.pasforms.toAddresses;
-    //     let addNumber = this.nextPasform++;
-    //     this.addforms.push({ id: addNumber, pasform: password });
-    //     // this.write++;
-    //     console.log(password);
-    //     console.log(this.nextPasform);
-    //     console.log(this.addforms);
-    // },
-    //   deleteForm(de) {
-    //     this.addforms.splice(de, 1);
-    //     this.write--;
-    // },
-  },
-};
+methods: {
+  async captureFile(event) {
+    event.preventDefault()      // preventDefault()はもしイベントがキャンセル可能だったら自動でキャンセルする
+    const file = await event.target.files[0]; // event.target.files でサイズ、形式などのファイル情報を取得できる
+    const reader = await new window.FileReader(); // FileReader はデータ読み込みできる
+    reader.readAsArrayBuffer(file);  // readAsArrayBuffer() でfileオブジェクトを読み込む
+    reader.onloadend = () => { // onloadend はデータ読み込み時に発生するイベントハンドラ
+      this.buffer = Buffer(reader.result);
+      return event.target.result;
+  }
+},
+  async onSubmit(event) {
+    event.preventDefault()
+    ipfs.files.add(this.buffer, async (error, result) => { // IPFSを用いて証明証を発行する部分
+      if(error) {
+        console.error(error)
+        return
+      }
+    const accounts = await this.$web3.eth.getAccounts() // MetaMaskで使っているアカウントの取得 
+    let _toAddresses = this.pasforms.toAddresses 
+      // 証明証をnft化する
+    let upNft = await this.$contract.methods.issueCertificate(this.nft.toName, this.nft.issueNumber, _toAddresses, result[0].hash).send({ from: accounts[0] })
+      // issueCertificate関数の引数は証明証名、発行数、発行先アドレス、ipfsHashデータ
+  })
+},
+},
+}
 </script>
 
 <style>
