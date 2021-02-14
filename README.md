@@ -40,11 +40,12 @@ https://image-guardian.web.app/
 # Usage
 ```
 
-You need to install Metamask in your browser and connect it to your virtual network.
+You need to install Metamask in your browser and connect it to your virtual network!
 
-Start Ganache and connect the blockchain of Ganache to Metamask.
+Start Ganache and connect the Ganache blockchain to Metamask.
 
-Image Guardian Issuer allows you to specify the name of the certificate, the number of certificates to be issued and the destination.
+Image Guardian Issuer allows you to send a certificate using Metamask, specifying the name of the certificate, the number of certificates to be issued, and the destination.
+You can then check with the UserPage that has the Metamask with the address that was sent!
 
 ```
 
